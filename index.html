@@ -11,11 +11,35 @@
 </head>
 <body>
 
-    <h1>🪙 SHARM Mini App</h1>
+    <div class="container">
 
-    <p id="status">Loading...</p>
+    <div class="card">
+        <h2 id="username">👤 Loading...</h2>
+        <p>ID: <span id="userid">0</span></p>
+    </div>
 
-    <script src="script.js"></script>
+    <div class="card">
+        <h1>🪙 SHARM COIN</h1>
 
+        <div class="balance">
+            <span id="balance">0</span> SHARM
+        </div>
+
+        <p>⚡ Energy</p>
+
+        <div class="energy-bar">
+            <div class="energy-fill" id="energyFill"></div>
+        </div>
+
+        <p id="energyText">1500 / 1500</p>
+
+        <button class="tap-btn" id="tapBtn">
+            TAP
+        </button>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
