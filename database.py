@@ -8,6 +8,7 @@ def get_connection():
         cursor_factory=RealDictCursor
     )
 
+
 def init_db():
     conn = get_connection()
     cur = conn.cursor()
@@ -27,6 +28,8 @@ def init_db():
     conn.commit()
     cur.close()
     conn.close()
+
+
 def create_user(telegram_id, username, first_name):
     conn = get_connection()
     cur = conn.cursor()
@@ -40,3 +43,43 @@ def create_user(telegram_id, username, first_name):
     conn.commit()
     cur.close()
     conn.close()
+
+
+def get_user(telegram_id):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute(
+        "SELECT * FROM users WHERE telegram_id=%s",
+        (telegram_id,)
+    )
+
+    user = cur.fetchone()
+
+    cur.close()
+    conn.close()
+
+    return user
+
+
+def update_balance(telegram_id, amount):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        UPDATE users
+        SET balance = balance + %s
+        WHERE telegram_id = %s
+        RETURNING balance;
+    """, (amount, telegram_id))
+
+    result = cur.fetchone()
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    if result:
+        return result["balance"]
+
+    return 0
