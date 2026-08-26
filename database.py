@@ -25,10 +25,19 @@ def init_db():
         );
     """)
 
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS referrals (
+            id SERIAL PRIMARY KEY,
+            referrer_id BIGINT NOT NULL,
+            referred_id BIGINT UNIQUE NOT NULL,
+            reward BIGINT DEFAULT 100,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    """)
+
     conn.commit()
     cur.close()
     conn.close()
-
 
 def create_user(telegram_id, username, first_name):
     conn = get_connection()
@@ -43,7 +52,38 @@ def create_user(telegram_id, username, first_name):
     conn.commit()
     cur.close()
     conn.close()
+def add_referral(referrer_id, referred_id, reward=1500):
+    conn = get_connection()
+    cur = conn.cursor()
 
+    try:
+        cur.execute("""
+            INSERT INTO referrals (referrer_id, referred_id, reward)
+            VALUES (%s, %s, %s)
+            ON CONFLICT (referred_id) DO NOTHING
+            RETURNING id;
+        """, (referrer_id, referred_id, reward))
+
+        result = cur.fetchone()
+
+        if result:
+            cur.execute("""
+                UPDATE users
+                SET balance = balance + %s
+                WHERE telegram_id = %s
+            """, (reward, referrer_id))
+
+        conn.commit()
+
+        return bool(result)
+
+    except Exception:
+        conn.rollback()
+        raise
+
+    finally:
+        cur.close()
+        conn.close()
 
 def get_user(telegram_id):
     conn = get_connection()
