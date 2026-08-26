@@ -47,7 +47,8 @@ tapBtn.addEventListener("click", () => {
 
     balance += 1;
     energy -= 1;
-
+    showFloatingPlus();
+    
     if (window.Telegram?.WebApp?.HapticFeedback) {
         Telegram.WebApp.HapticFeedback.impactOccurred("light");
     }
