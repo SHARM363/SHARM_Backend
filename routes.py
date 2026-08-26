@@ -1,7 +1,4 @@
-from flask import Blueprint, request, jsonify
-from database import create_user, get_user, update_balance
-
-api = Blueprint("api", __name__)
+from database import create_user, get_user, update_balance, add_referral
 
 
 @api.route("/", methods=["GET"])
