@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify
+from database import create_user
 
 api = Blueprint("api", __name__)
 
-# Home
 @api.route("/", methods=["GET"])
 def home():
     return jsonify({
@@ -11,7 +11,6 @@ def home():
     })
 
 
-# Health Check
 @api.route("/health", methods=["GET"])
 def health():
     return jsonify({
@@ -20,36 +19,40 @@ def health():
     })
 
 
-# Telegram Login
 @api.route("/api/auth", methods=["POST"])
 def auth():
-    data = request.json
+    data = request.get_json()
+
+    telegram_id = data.get("telegram_id")
+    username = data.get("username")
+    first_name = data.get("first_name")
+
+    if not telegram_id:
+        return jsonify({
+            "success": False,
+            "message": "telegram_id is required"
+        }), 400
+
+    create_user(telegram_id, username, first_name)
 
     return jsonify({
         "success": True,
-        "message": "Authentication successful",
-        "user": data
+        "message": "User registered successfully"
     })
 
 
-# Tap
 @api.route("/api/tap", methods=["POST"])
 def tap():
-
     return jsonify({
         "success": True,
-        "reward": 1,
-        "message": "Tap successful"
+        "reward": 1
     })
 
 
-# Daily Reward
 @api.route("/api/daily/claim", methods=["POST"])
 def daily_reward():
-
     return jsonify({
         "success": True,
         "reward": 100,
-        "day": 1,
-        "message": "Daily reward claimed"
+        "day": 1
     })
