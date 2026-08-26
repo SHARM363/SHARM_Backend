@@ -6,40 +6,190 @@
     <title>SHARM Mini App</title>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-    <div class="container">
+<div class="app">
 
-    <div class="card">
-        <h2 id="username">👤 Loading...</h2>
-        <p>ID: <span id="userid">0</span></p>
-    </div>
+    <!-- HOME PAGE -->
+    <section id="homePage" class="page active">
 
-    <div class="card">
-        <h1>🪙 SHARM COIN</h1>
-
-        <div class="balance">
-            <span id="balance">0</span> SHARM
+        <div class="profile-card">
+            <h2 id="username">👤 Loading...</h2>
+            <p>ID: <span id="userid">0</span></p>
         </div>
 
-        <p>⚡ Energy</p>
+        <div class="coin-card">
 
-        <div class="energy-bar">
-            <div class="energy-fill" id="energyFill"></div>
+            <img src="assets/sharm-coin.png"
+                 id="coin"
+                 class="coin">
+
+            <h2>SHARM COIN</h2>
+
+            <div class="balance">
+                <span id="balance">0</span> SHARM
+            </div>
+
+            <div class="energy-box">
+
+                <div class="energy-info">
+                    <span>⚡ Energy</span>
+                    <span id="energyText">1500 / 1500</span>
+                </div>
+
+                <div class="energy-bar">
+                    <div class="energy-fill"
+                         id="energyFill">
+                    </div>
+                </div>
+
+            </div>
+
+            <button id="tapBtn"
+                    class="tap-btn">
+                TAP TO MINE
+            </button>
+
         </div>
 
-        <p id="energyText">1500 / 1500</p>
+        <div class="airdrop-card">
+            🚀 AIRDROP COMING SOON
+        </div>
 
-        <button class="tap-btn" id="tapBtn">
-            TAP
+    </section>
+    <!-- FRIENDS PAGE -->
+    <section id="friendsPage" class="page">
+
+        <div class="card">
+            <h2>👥 Friends</h2>
+
+            <p>Invite your friends and earn SHARM rewards.</p>
+
+            <input
+                type="text"
+                id="referralLink"
+                readonly
+                value="https://t.me/SHARMTokenBot?start=ref">
+
+            <button id="copyReferralBtn">
+                📋 Copy Referral Link
+            </button>
+
+            <div class="stats">
+                <p>Total Referrals: <span id="refCount">0</span></p>
+                <p>Referral Reward: <span id="refReward">0</span> SHARM</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- LEADERBOARD PAGE -->
+    <section id="leaderboardPage" class="page">
+
+        <div class="card">
+
+            <h2>🏆 Leaderboard</h2>
+
+            <div id="leaderboardList">
+
+                <p>Loading leaderboard...</p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- SHOP PAGE -->
+    <section id="shopPage" class="page">
+
+        <div class="card">
+
+            <h2>🛒 Shop</h2>
+
+            <div class="shop-item">
+                <h3>⚡ Energy Boost</h3>
+                <p>Price: 100 SHARM</p>
+                <button>Buy</button>
+            </div>
+
+            <div class="shop-item">
+                <h3>👆 Tap Power +1</h3>
+                <p>Price: 250 SHARM</p>
+                <button>Buy</button>
+            </div>
+
+            <div class="shop-item">
+                <h3>🚀 Auto Miner</h3>
+                <p>Coming Soon</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- SETTINGS PAGE -->
+    <section id="settingsPage" class="page">
+
+        <div class="card">
+
+            <h2>⚙️ Settings</h2>
+
+            <h3>🌐 Social Media</h3>
+
+            <a href="https://t.me/SHARMTokenBot" target="_blank">🤖 Telegram Bot</a><br><br>
+
+            <a href="https://tiktok.com/@sharm_24_bot" target="_blank">🎵 TikTok</a><br><br>
+
+            <a href="https://www.facebook.com/profile.php?id=61593454993772" target="_blank">📘 Facebook</a><br><br>
+
+            <a href="https://www.youtube.com/@sharm_24_bot" target="_blank">▶️ YouTube</a><br><br>
+
+            <a href="https://x.com/SHARMILING" target="_blank">❌ X (Twitter)</a>
+
+        </div>
+
+    </section>
+        <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+
+        <button class="nav-btn active" data-page="homePage">
+            🏠
+            <span>Home</span>
         </button>
-    </div>
+
+        <button class="nav-btn" data-page="friendsPage">
+            👥
+            <span>Friends</span>
+        </button>
+
+        <button class="nav-btn" data-page="leaderboardPage">
+            🏆
+            <span>Leaderboard</span>
+        </button>
+
+        <button class="nav-btn" data-page="shopPage">
+            🛒
+            <span>Shop</span>
+        </button>
+
+        <button class="nav-btn" data-page="settingsPage">
+            ⚙️
+            <span>Settings</span>
+        </button>
+
+    </nav>
 
 </div>
 
 <script src="script.js"></script>
+
 </body>
 </html>
