@@ -63,3 +63,19 @@ setInterval(() => {
 }, 1000);
 
 updateUI();
+function showFloatingPlus() {
+    const plus = document.createElement("div");
+    plus.className = "floating-plus";
+    plus.innerText = "+1";
+
+    const rect = tapBtn.getBoundingClientRect();
+
+    plus.style.left = rect.left + rect.width / 2 + "px";
+    plus.style.top = rect.top + "px";
+
+    document.body.appendChild(plus);
+
+    setTimeout(() => {
+        plus.remove();
+    }, 800);
+}
