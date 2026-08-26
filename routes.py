@@ -1,5 +1,7 @@
-from database import create_user, get_user, update_balance, add_referral
+from flask import Blueprint, request, jsonify
+from database import create_user, get_user, update_balance, add_referral, get_connection
 
+api = Blueprint("api", __name__)
 
 @api.route("/", methods=["GET"])
 def home():
@@ -7,7 +9,6 @@ def home():
         "success": True,
         "message": "Welcome to SHARM Backend API"
     })
-
 
 @api.route("/health", methods=["GET"])
 def health():
@@ -107,3 +108,38 @@ def daily_reward():
         "reward": 100,
         "balance": balance
     })
+@api.route("/api/referrals", methods=["POST"])
+def referrals():
+    data = request.get_json() or {}
+
+    telegram_id = data.get("telegram_id")
+
+    if not telegram_id:
+        return jsonify({
+            "success": False,
+            "message": "telegram_id is required"
+        }), 400
+
+    conn = get_connection()
+    cur = conn.cursor()
+
+    try:
+        cur.execute("""
+            SELECT
+                COUNT(*) AS total_referrals,
+                COALESCE(SUM(reward), 0) AS total_reward
+            FROM referrals
+            WHERE referrer_id = %s
+        """, (telegram_id,))
+
+        result = cur.fetchone()
+
+        return jsonify({
+            "success": True,
+            "referrals": result["total_referrals"],
+            "reward": result["total_reward"]
+        })
+
+    finally:
+        cur.close()
+        conn.close()
