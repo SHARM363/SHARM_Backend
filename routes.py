@@ -1,7 +1,8 @@
 from flask import Blueprint, request, jsonify
-from database import create_user
+from database import create_user, get_user, update_balance
 
 api = Blueprint("api", __name__)
+
 
 @api.route("/", methods=["GET"])
 def home():
@@ -35,24 +36,76 @@ def auth():
 
     create_user(telegram_id, username, first_name)
 
+    user = get_user(telegram_id)
+
     return jsonify({
         "success": True,
-        "message": "User registered successfully"
+        "user": user
+    })
+
+
+@api.route("/api/me", methods=["POST"])
+def me():
+    data = request.get_json()
+
+    telegram_id = data.get("telegram_id")
+
+    if not telegram_id:
+        return jsonify({
+            "success": False,
+            "message": "telegram_id is required"
+        }), 400
+
+    user = get_user(telegram_id)
+
+    if not user:
+        return jsonify({
+            "success": False,
+            "message": "User not found"
+        }), 404
+
+    return jsonify({
+        "success": True,
+        "user": user
     })
 
 
 @api.route("/api/tap", methods=["POST"])
 def tap():
+    data = request.get_json()
+
+    telegram_id = data.get("telegram_id")
+
+    if not telegram_id:
+        return jsonify({
+            "success": False,
+            "message": "telegram_id is required"
+        }), 400
+
+    balance = update_balance(telegram_id, 1)
+
     return jsonify({
         "success": True,
-        "reward": 1
+        "balance": balance
     })
 
 
 @api.route("/api/daily/claim", methods=["POST"])
 def daily_reward():
+    data = request.get_json()
+
+    telegram_id = data.get("telegram_id")
+
+    if not telegram_id:
+        return jsonify({
+            "success": False,
+            "message": "telegram_id is required"
+        }), 400
+
+    balance = update_balance(telegram_id, 100)
+
     return jsonify({
         "success": True,
         "reward": 100,
-        "day": 1
+        "balance": balance
     })
