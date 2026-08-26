@@ -27,3 +27,16 @@ def init_db():
     conn.commit()
     cur.close()
     conn.close()
+def create_user(telegram_id, username, first_name):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        INSERT INTO users (telegram_id, username, first_name)
+        VALUES (%s, %s, %s)
+        ON CONFLICT (telegram_id) DO NOTHING;
+    """, (telegram_id, username, first_name))
+
+    conn.commit()
+    cur.close()
+    conn.close()
