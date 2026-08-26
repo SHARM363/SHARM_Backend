@@ -27,3 +27,39 @@ if (user) {
         console.error("Auth error:", err);
     });
            }
+let balance = 0;
+let energy = 1500;
+const maxEnergy = 1500;
+
+const balanceEl = document.getElementById("balance");
+const energyText = document.getElementById("energyText");
+const energyFill = document.getElementById("energyFill");
+const tapBtn = document.getElementById("tapBtn");
+
+function updateUI() {
+    balanceEl.textContent = balance;
+    energyText.textContent = `${energy} / ${maxEnergy}`;
+    energyFill.style.width = `${(energy / maxEnergy) * 100}%`;
+}
+
+tapBtn.addEventListener("click", () => {
+    if (energy <= 0) return;
+
+    balance += 1;
+    energy -= 1;
+
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        Telegram.WebApp.HapticFeedback.impactOccurred("light");
+    }
+
+    updateUI();
+});
+
+setInterval(() => {
+    if (energy < maxEnergy) {
+        energy += 1;
+        updateUI();
+    }
+}, 1000);
+
+updateUI();
