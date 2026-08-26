@@ -75,6 +75,7 @@ def tap():
     data = request.get_json()
 
     telegram_id = data.get("telegram_id")
+    amount = data.get("amount", 1)
 
     if not telegram_id:
         return jsonify({
@@ -82,7 +83,7 @@ def tap():
             "message": "telegram_id is required"
         }), 400
 
-    balance = update_balance(telegram_id, 1)
+    balance = update_balance(telegram_id, amount)
 
     return jsonify({
         "success": True,
