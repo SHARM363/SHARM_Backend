@@ -52,9 +52,13 @@ def create_user(telegram_id, username, first_name):
     conn.commit()
     cur.close()
     conn.close()
+
 def add_referral(referrer_id, referred_id, reward=1500):
     conn = get_connection()
     cur = conn.cursor()
+
+    if referrer_id == referred_id:
+        return False
 
     try:
         cur.execute("""
@@ -63,7 +67,6 @@ def add_referral(referrer_id, referred_id, reward=1500):
             ON CONFLICT (referred_id) DO NOTHING
             RETURNING id;
         """, (referrer_id, referred_id, reward))
-
         result = cur.fetchone()
 
         if result:
