@@ -16,7 +16,44 @@ def health():
         "success": True,
         "status": "online"
     })
+@api.route("/leaderboard", methods=["GET"])
+def leaderboard():
 
+    try:
+        conn = get_connection()
+
+        with conn.cursor() as cur:
+
+            cur.execute("""
+                SELECT
+                    telegram_id,
+                    username,
+                    first_name,
+                    balance
+                FROM users
+                ORDER BY balance DESC
+                LIMIT 100
+            """)
+
+            users = cur.fetchall()
+
+        conn.close()
+
+        return jsonify({
+            "success": True,
+            "leaderboard": users
+        })
+
+    except Exception as e:
+
+        print("Leaderboard error:", e)
+
+        return jsonify({
+            "success": False,
+            "message": "Failed to load leaderboard"
+        }), 500
+
+        
 @api.route("/api/auth", methods=["POST"])
 def auth():
     data = request.get_json()
