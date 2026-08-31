@@ -25,6 +25,9 @@ def auth():
     username = data.get("username")
     first_name = data.get("first_name")
     referrer_id = data.get("referrer_id")
+    
+    print("Telegram ID:", telegram_id)
+    print("Referral ID:", referrer_id)
 
     if not telegram_id:
         return jsonify({
