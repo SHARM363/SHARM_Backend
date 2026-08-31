@@ -17,7 +17,6 @@ def health():
         "status": "online"
     })
 
-
 @api.route("/api/auth", methods=["POST"])
 def auth():
     data = request.get_json()
@@ -25,6 +24,7 @@ def auth():
     telegram_id = data.get("telegram_id")
     username = data.get("username")
     first_name = data.get("first_name")
+    referrer_id = data.get("referrer_id")
 
     if not telegram_id:
         return jsonify({
@@ -34,18 +34,18 @@ def auth():
 
     create_user(telegram_id, username, first_name)
 
-if referrer_id and str(referrer_id) != str(telegram_id):
-    add_referral(
-        int(referrer_id),
-        int(telegram_id)
-    )
+    if referrer_id and str(referrer_id) != str(telegram_id):
+        add_referral(
+            int(referrer_id),
+            int(telegram_id)
+        )
 
-user = get_user(telegram_id)
+    user = get_user(telegram_id)
 
-return jsonify({
-    "success": True,
-    "user": user
-})
+    return jsonify({
+        "success": True,
+        "user": user
+    })
 
 @api.route("/api/me", methods=["POST"])
 def me():
