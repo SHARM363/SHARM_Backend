@@ -34,13 +34,18 @@ def auth():
 
     create_user(telegram_id, username, first_name)
 
-    user = get_user(telegram_id)
+if referrer_id and str(referrer_id) != str(telegram_id):
+    add_referral(
+        int(referrer_id),
+        int(telegram_id)
+    )
 
-    return jsonify({
-        "success": True,
-        "user": user
-    })
+user = get_user(telegram_id)
 
+return jsonify({
+    "success": True,
+    "user": user
+})
 
 @api.route("/api/me", methods=["POST"])
 def me():
