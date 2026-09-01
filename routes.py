@@ -111,7 +111,46 @@ def me():
         "success": True,
         "user": user
     })
+@api.route("/api/admin/stats", methods=["GET"])
+def admin_stats():
 
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+
+        # Total users
+        cur.execute("SELECT COUNT(*) AS total_users FROM users;")
+        total_users = cur.fetchone()["total_users"]
+
+        # Total balance
+        cur.execute("SELECT COALESCE(SUM(balance), 0) AS total_balance FROM users;")
+        total_balance = cur.fetchone()["total_balance"]
+
+        # Today's new users
+        cur.execute("""
+            SELECT COUNT(*) AS today_users
+            FROM users
+            WHERE DATE(created_at) = CURRENT_DATE;
+        """)
+        today_users = cur.fetchone()["today_users"]
+
+        cur.close()
+        conn.close()
+
+        return jsonify({
+            "success": True,
+            "total_users": total_users,
+            "total_balance": total_balance,
+            "today_users": today_users
+        })
+
+    except Exception as e:
+        print("Admin Stats Error:", e)
+
+        return jsonify({
+            "success": False,
+            "message": "Failed to load admin stats"
+        }), 500
 
 @api.route("/api/tap", methods=["POST"])
 def tap():
