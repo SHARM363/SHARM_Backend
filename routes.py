@@ -151,7 +151,49 @@ def admin_stats():
             "success": False,
             "message": "Failed to load admin stats"
         }), 500
-        
+@api.route("/api/admin/settings", methods=["POST"])
+def update_admin_settings():
+
+    data = request.get_json()
+
+    key = data.get("setting_key")
+    value = data.get("setting_value")
+
+    if not key:
+        return jsonify({
+            "success": False,
+            "message": "setting_key is required"
+        }), 400
+
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+
+        cur.execute("""
+            UPDATE settings
+            SET setting_value = %s
+            WHERE setting_key = %s;
+        """, (str(value), key))
+
+        conn.commit()
+
+        cur.close()
+        conn.close()
+
+        return jsonify({
+            "success": True,
+            "message": "Setting updated successfully"
+        })
+
+    except Exception as e:
+
+        print("Update Settings Error:", e)
+
+        return jsonify({
+            "success": False,
+            "message": "Failed to update setting"
+        }), 500
+
 @api.route("/api/admin/users", methods=["GET"])
 def admin_users():
 
