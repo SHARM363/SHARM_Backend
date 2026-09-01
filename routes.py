@@ -16,7 +16,7 @@ def health():
         "success": True,
         "status": "online"
     })
-@api.route("/leaderboard", methods=["GET"])
+@api.route("/api/leaderboard", methods=["GET"])
 def leaderboard():
 
     try:
