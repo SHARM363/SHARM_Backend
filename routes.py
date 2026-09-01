@@ -232,44 +232,6 @@ def update_admin_settings():
             "success": False,
             "message": "Failed to update setting"
         }), 500
-
-@api.route("/api/admin/users", methods=["GET"])
-def admin_users():
-
-    try:
-        conn = get_connection()
-        cur = conn.cursor()
-
-        cur.execute("""
-            SELECT
-                telegram_id,
-                username,
-                first_name,
-                balance,
-                energy,
-                created_at
-            FROM users
-            ORDER BY balance DESC;
-        """)
-
-        users = cur.fetchall()
-
-        cur.close()
-        conn.close()
-
-        return jsonify({
-            "success": True,
-            "users": users
-        })
-
-    except Exception as e:
-
-        print("Admin Users Error:", e)
-
-        return jsonify({
-            "success": False,
-            "message": "Failed to load users"
-        }), 500
         
 @api.route("/api/tap", methods=["POST"])
 def tap():
