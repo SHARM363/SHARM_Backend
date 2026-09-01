@@ -24,7 +24,30 @@ def init_db():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     """)
-
+cur.execute("""
+    CREATE TABLE IF NOT EXISTS settings (
+        setting_key TEXT PRIMARY KEY,
+        setting_value TEXT NOT NULL
+    );
+""")
+cur.execute("""
+    INSERT INTO settings (setting_key, setting_value)
+    VALUES
+    ('referral_bonus', '1500'),
+    ('daily_reward', '100'),
+    ('youtube_reward', '500'),
+    ('facebook_reward', '500'),
+    ('telegram_reward', '500'),
+    ('tiktok_reward', '500'),
+    ('x_reward', '500'),
+    ('youtube_link', ''),
+    ('facebook_link', ''),
+    ('telegram_link', ''),
+    ('tiktok_link', ''),
+    ('x_link', ''),
+    ('airdrop_status', 'coming_soon')
+    ON CONFLICT (setting_key) DO NOTHING;
+""")
     cur.execute("""
         CREATE TABLE IF NOT EXISTS referrals (
             id SERIAL PRIMARY KEY,
