@@ -209,7 +209,42 @@ def tap():
         "success": True,
         "balance": balance
     })
+@api.route("/api/admin/settings", methods=["GET"])
+def admin_settings():
 
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+
+        cur.execute("""
+            SELECT setting_key, setting_value
+            FROM settings
+            ORDER BY setting_key;
+        """)
+
+        rows = cur.fetchall()
+
+        settings = {}
+
+        for row in rows:
+            settings[row["setting_key"]] = row["setting_value"]
+
+        cur.close()
+        conn.close()
+
+        return jsonify({
+            "success": True,
+            "settings": settings
+        })
+
+    except Exception as e:
+
+        print("Admin Settings Error:", e)
+
+        return jsonify({
+            "success": False,
+            "message": "Failed to load settings"
+        }), 500
 
 @api.route("/api/daily/claim", methods=["POST"])
 def daily_reward():
